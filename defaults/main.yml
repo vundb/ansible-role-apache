@@ -1,0 +1,32 @@
+#
+# Array with services to be restarted on changes.
+#
+apache_services: ["apache2"]
+
+
+#
+# System user for apache process.
+#
+apache_user: "apache"
+
+
+#
+# System group for apache process.
+#
+apache_group: "apache"
+
+
+#
+# Port used for apache process.
+#
+apache_port: "80"
+
+
+#
+# Custom apache options to be pass as env-values when starting apache service.
+#
+# Avaiable opts:
+#   - PHP
+#   - PASSENGER
+#
+apache_opts: []

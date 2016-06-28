@@ -1,0 +1,49 @@
+---
+
+# define variables used for gentoo instances
+
+- name: set variables
+  set_fact:
+    apache_merged_opts: "{{ apache_default_opts | union(apache_opts) }}"
+
+
+# install apache
+
+- name: install apache
+  become: yes
+  portage: package="www-servers/apache" state="present" newuse=yes update=yes
+
+
+# configure apache
+
+- name: write apache service configuration
+  become: yes
+  lineinfile: dest="/etc/apache2/httpd.conf" regexp="^{{ item.search }}" line="{{ item.replace }}" state="{{ item.state | default('present') }}"
+  with_items:
+    - { search: "User ",                          replace: "User {{ apache_user }}" }
+    - { search: "Group ",                         replace: "Group {{ apache_group }}" }
+    - { search: "Include /etc/apache2/vhosts.d/", replace: "Include /etc/apache2/vhosts.d/" }
+    - { search: "Listen ",                        replace: "Listen {{ apache_port }}" }
+    - { search: "ServerName ",                    replace: "ServerName {{ apache_server_name }}" }
+    - { search: "NameVirtualHost ",               replace: "NameVirtualHost *:{{ apache_port }}" }
+  notify: apache - restart
+
+
+# remove default configuration
+
+- name: ensure default configuration files are absent
+  become: yes
+  file: path="{{ item }}" state="absent"
+  with_items:
+    - "/etc/apache2/vhosts.d/00_default_ssl_vhost.conf"
+    - "/etc/apache2/vhosts.d/00_default_vhost.conf"
+    - "/etc/apache2/vhosts.d/default_vhost.include"
+  notify: apache - restart
+
+
+# write some cofiguration files
+
+- name: write apache system configuration
+  become: yes
+  template: src="apache-config.j2" dest="/etc/conf.d/apache2"
+  notify: apache - restart

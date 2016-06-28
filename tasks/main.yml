@@ -1,0 +1,24 @@
+---
+
+# fail when distribution is not supported
+
+- name: check if distribution is supported
+  fail: msg="'{{ ansible_distribution }}' is not supported by this role"
+  when: ansible_distribution not in ["Gentoo"]
+
+
+# run os specific tasks
+
+- include: gentoo/main.yml
+  when: ansible_distribution == "Gentoo"
+
+
+# execute post tasks
+
+- name: set right permissions to the www-directory
+  become: yes
+  file: path="/var/www" owner="{{ apache_user }}" group="{{ apache_group }}" state="directory"
+
+- name: ensure apache is running
+  become: yes
+  service: name="apache2" state="started" enabled=yes
