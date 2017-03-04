@@ -35,6 +35,10 @@
   become: yes
   file: path="{{ item }}" state="absent"
   with_items:
+    - "/etc/apache2/vhosts.d/._cfg0000_00_default_ssl_vhost.conf"
+    - "/etc/apache2/vhosts.d/._cfg0000_00_default_vhost.conf"
+    - "/etc/apache2/vhosts.d/._cfg0000_default_vhost.include"
+    - "/etc/apache2/vhosts.d/.keep_www-servers_apache-2"
     - "/etc/apache2/vhosts.d/00_default_ssl_vhost.conf"
     - "/etc/apache2/vhosts.d/00_default_vhost.conf"
     - "/etc/apache2/vhosts.d/default_vhost.include"
