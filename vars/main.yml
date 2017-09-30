@@ -7,4 +7,4 @@ apache_server_name: "localhost"
 #
 # Default apache options to be pass as env-values when starting apache service.
 #
-apache_default_opts: ["DEFAULT_VHOST", "INFO", "SSL", "SSL_DEFAULT_VHOST", "LANGUAGE"]
+apache_default_opts: ["INFO", "SSL", "LANGUAGE"]
